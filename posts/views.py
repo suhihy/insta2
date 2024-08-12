@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Post
+from accounts.models import User
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -11,10 +12,23 @@ def index(request):
 
     context = {
         'posts': posts,
-        'form': form, 
+        'form': form,
     }
 
     return render(request, 'index.html', context)
+
+def feed(request):
+    followings = request.user.followings.all()
+    posts = Post.objects.filter(user__in=followings)
+    form = CommentForm()
+
+    context = {
+        'posts': posts,
+        'form': form,
+        'followings': followings,
+    }
+
+    return render(request, 'feed.html', context)
 
 
 @login_required
