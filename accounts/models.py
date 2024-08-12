@@ -10,3 +10,5 @@ class User(AbstractUser):
         upload_to='profile'
     )
 
+    followings = models.ManyToManyField('self', related_name='followers', symmetrical=False)
+
