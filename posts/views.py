@@ -64,3 +64,13 @@ def like(request, post_id):
         post.like_users.add(user)
 
     return redirect('posts:index')
+
+
+def detail(request, post_id):
+    post = Post.objects.get(id=post_id)
+
+    context = {
+        'post': post,
+    }
+
+    return render(request, 'detail.html', context)
