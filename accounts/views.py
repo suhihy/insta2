@@ -53,3 +53,17 @@ def profile(request, username):
     }
 
     return render(request, 'profile.html', context)
+
+def follow(request, username):
+    me = request.user
+    you = User.objects.get(username=username)
+
+    # 이미 팔로우 한 경우
+    # if you in me.followings.all():
+    if me in you.followers.all():
+        you.followers.remove(me)
+    # 팔로우 안 한 경우
+    else:
+        you.followers.add(me)
+
+    return redirect('accounts:profile', username=username)
