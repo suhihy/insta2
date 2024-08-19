@@ -60,8 +60,12 @@ def comment_create(request, post_id):
         comment.user = request.user
         comment.post_id = post_id
         comment.save()
-
-        return redirect('posts:index')
+        
+        # request.META.get('HTTP_REFERER') => 이전 주소 나타냄
+        if 'detail' in request.META.get('HTTP_REFERER'):
+            return redirect('posts:detail', post_id=post_id)
+        else:
+            return redirect('posts:index')
 
 @login_required
 def like(request, post_id):
@@ -82,9 +86,11 @@ def like(request, post_id):
 
 def detail(request, post_id):
     post = Post.objects.get(id=post_id)
+    form = CommentForm()
 
     context = {
         'post': post,
+        'form': form,
     }
 
     return render(request, 'detail.html', context)
